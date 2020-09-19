@@ -93,6 +93,10 @@ label {
   font-size: 1.275rem
 }
 
+.table__body__row:hover {
+  background: silver;
+}
+
 .table__body__thead-column {
   display: flex;
   justify-content: center;
@@ -269,4 +273,55 @@ label {
   border-radius: 4px;
   margin-left: 10px;
   outline: none;
+}
+
+.selected-row {
+  color: #fff;
+  width: 95%;
+  margin: auto;
+  margin-bottom: 4%;
+  font-size: 20px;
+}
+
+.selected-row > label {
+  display: block;
+  text-align: unset;
+  margin-left: unset;
+  margin-top: 5px;
+}
+
+.selected-row textarea {
+  width: 390px;
+  height: 95px;
+}
+
+.selected_row__prop {
+  margin-top: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+  .table__body {
+    font-size: 0.975rem
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  th {
+    padding: 0;
+  }
+  tr {
+    height: 15px;
+  }
+  .table__header__title {
+    font-size: 0.85rem;
+  }
+  .table__body {
+    font-size: 0.475rem
+  }
+  .select-data {
+    top: 2.3%;
+  }
+  .add-row-button__wrapper {
+    margin-top: 5%;
+  }
 }

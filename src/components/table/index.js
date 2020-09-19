@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import Head from 'components/table-header';
 import Footer from 'components/table-footer';
 import Loader from 'components/loader-indicator';
+import ColumnNames from 'components/column-names';
 import NoRecordsText from 'components/no-records-text';
-import { url, urlBiggerData } from 'constants.js';
+import { url, urlBiggerData, columns } from 'constants.js';
 
-const Table = ({ selectedData, columns, newRow }) => {
+const Table = ({ selectedData, setSelectedRow, newRow }) => {
   const [searchValue, setSearchValue] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
@@ -16,6 +17,7 @@ const Table = ({ selectedData, columns, newRow }) => {
 
   useEffect(() => {
     if (selectedData !== null) {
+      setCurrentPage(1);
       setSavedData([]);
       setData([]);
       const dataUrl = selectedData === 'small' ? url : urlBiggerData;
@@ -24,6 +26,9 @@ const Table = ({ selectedData, columns, newRow }) => {
         .then(tableData => {
           setData(tableData);
           setSavedData(tableData);
+          // if we want to add new rows to fetched data
+          // setData([...savedData.filter((el) => el.id && !el.address), ...tableData]);
+          // setSavedData([...savedData.filter((el) => el.id && !el.address), ...tableData]);
         });
     }
   }, [selectedData]);
@@ -66,7 +71,6 @@ const Table = ({ selectedData, columns, newRow }) => {
     if (value === "") {
       setData(savedData);
     } else {
-      console.log(savedData);
       setData(
         [...savedData].filter((o) =>
           ["id", "firstName", "lastName", "email", "phone"].some((prop) =>
@@ -78,29 +82,20 @@ const Table = ({ selectedData, columns, newRow }) => {
     setData(savedData);
     setSearchValue('');
   }
+  const selectRow = (e, row) => {
+    const sheet = window.document.styleSheets[0];
+    console.log(sheet.cssRules.length, 'length')
+    if (sheet.cssRules.length === 43) {
+      sheet.deleteRule(42);
+    }
+    const cssRuleIndex = sheet.insertRule(`.ln${row.lastName + row.id} { background: grey; }`, sheet.cssRules.length);
+    setSelectedRow(row);
+  }
   return (
     <div className="table">
       <Head searchRowByValue={searchRowByValue} searchValue={searchValue} clearSearchField={clearSearchField}/>
       <table className="table__body">
-        <thead>
-          <tr>
-            {columns.map((column, key) => (
-              <th key={key}>
-                <span
-                  className="table__body__thead-column"
-                  onClick={(e) => sortByColumn(e)}
-                >
-                  <div>{column}</div>
-                  <img
-                    className="table__body__sort-icon"
-                    src={require("assets/arrow_downward-24px.svg")}
-                    alt=""
-                  />
-                </span>
-              </th>
-            ))}
-          </tr>
-        </thead>
+        <ColumnNames columns={columns} sortByColumn={sortByColumn} />
         <tbody>
           {!savedData.length ? (
             <Loader selectedData={selectedData}/>
@@ -108,12 +103,12 @@ const Table = ({ selectedData, columns, newRow }) => {
             data
               .slice(50 * (currentPage - 1), 50 * currentPage)
               .map((row, key) => (
-                <tr key={key}>
-                  <td>{row["id"]}</td>
-                  <td>{row["firstName"]}</td>
-                  <td>{row["lastName"]}</td>
-                  <td>{row["email"]}</td>
-                  <td>{row["phone"]}</td>
+                <tr key={key} onClick={(e) => selectRow(e, row)} className={`table__body__row ln${row.lastName + row.id}`}>
+                  <td><div>{row["id"]}</div></td>
+                  <td><div>{row["firstName"]}</div></td>
+                  <td><div>{row["lastName"]}</div></td>
+                  <td><div>{row["email"]}</div></td>
+                  <td><div>{row["phone"]}</div></td>
                 </tr>
               ))
           ) : <NoRecordsText/>}

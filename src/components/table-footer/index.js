@@ -37,7 +37,7 @@ const Footer = ({ dataLength, currentPage, setCurrentPage }) => {
                     ? `${dataLength ? '1' : '0'}-${dataLength} of ${dataLength}`
                     : `${50 * (currentPage - 1) + 1}-${
                         50 * currentPage
-                      } of 1000`}
+                      } of ${dataLength}`}
                 </span>
                 <img
                   className="page-info__table-pagination__contol-buttons"
