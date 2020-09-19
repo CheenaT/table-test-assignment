@@ -17,7 +17,6 @@ const AddRowButton = ({ setNewRow }) => {
     }
   };
   const addNewRow = data => {
-    console.log('data', data)
     if (setIsShowAddInTable) {
       setNewRow(data);
       document.querySelector(".add-row__dropdown").style.display = "none";
@@ -29,13 +28,11 @@ const AddRowButton = ({ setNewRow }) => {
   useEffect(() => {
     const fieldsData = watch();
     const isAnyFieldIsEmpty = Object.keys(fieldsData).some((prop) => fieldsData[prop] === '');
-    console.log('isAnyFieldIsEmpty', isAnyFieldIsEmpty, isShowAddInTable);
     if (!isAnyFieldIsEmpty) {
       setIsShowAddInTable(true);
     } else {
       setIsShowAddInTable(false);
     }
-    console.log('fieldsData', fieldsData);
   });
   return (
     <div>
